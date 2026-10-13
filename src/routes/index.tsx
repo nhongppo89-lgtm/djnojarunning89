@@ -19,6 +19,7 @@ import {
   genres,
   heroIntro,
   heroLines,
+  heroPortrait,
   journey,
   liveEvents,
   mixes,
@@ -132,12 +133,16 @@ function ArtistHome() {
       </header>
 
       <section id="home" className="hero scene" aria-labelledby="hero-title">
-        <div className="hero-image-wrap" aria-hidden="true">
-          <picture>
-            <source media="(min-width: 900px)" srcSet={`${imageUrl('/images/no-performing.jpeg', 1600)} 1x, ${imageUrl('/images/no-performing.jpeg', 2400)} 2x`} />
-            <img src={imageUrl('/images/no-performing.jpeg', 1100)} alt="" fetchPriority="high" />
-          </picture>
-          <div className="hero-image-wash" />
+        <div className="hero-image-wrap">
+          <img
+            src={imageUrl(heroPortrait.src, 900)}
+            srcSet={`${imageUrl(heroPortrait.src, 400)} 400w, ${imageUrl(heroPortrait.src, 700)} 700w, ${imageUrl(heroPortrait.src, 1086)} 1086w`}
+            sizes="(min-width: 1020px) 46vw, (min-width: 600px) 560px, calc(100vw - 40px)"
+            alt={heroPortrait.alt}
+            width={heroPortrait.width}
+            height={heroPortrait.height}
+            fetchPriority="high"
+          />
         </div>
         <div className="running-line running-line--one" aria-hidden="true" />
         <div className="running-line running-line--two" aria-hidden="true" />
@@ -249,7 +254,7 @@ function ArtistHome() {
                 <p className="eyebrow">{mix.type}</p>
                 <h3>{mix.title}</h3>
                 <p>{mix.description}</p>
-                <MediaEmbed kind="mixcloud" title={mix.title} url={mix.url} />
+                <MediaEmbed kind="mixcloud" title={mix.title} url={mix.url} linkLabel={mix.id === 'demo-full-play' ? 'LISTEN ON MIXCLOUD' : undefined} />
               </div>
             </article>
           ))}
