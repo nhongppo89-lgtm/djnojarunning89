@@ -6,6 +6,7 @@ type MediaEmbedProps =
       kind: 'mixcloud'
       title: string
       url: string
+      linkLabel?: string
     }
   | {
       kind: 'youtube'
@@ -39,8 +40,8 @@ export function MediaEmbed(props: MediaEmbedProps) {
             <span><strong>ฟัง Mix</strong><small>โหลด Mixcloud Player เมื่อกด</small></span>
           </button>
         )}
-        <a className="text-link" href={props.url} target="_blank" rel="noreferrer">
-          เปิดใน Mixcloud <ExternalLink size={14} aria-hidden="true" />
+        <a className="text-link" href={props.url} target="_blank" rel="noopener noreferrer">
+          {props.linkLabel ?? 'เปิดใน Mixcloud'} <ExternalLink size={14} aria-hidden="true" />
         </a>
       </div>
     )

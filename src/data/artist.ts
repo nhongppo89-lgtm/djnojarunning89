@@ -28,6 +28,13 @@ export const navigation = [
 export const heroIntro =
   'DJ หน้าใหม่จากประเทศไทย กำลังสร้าง Sound ของตัวเอง ทีละเพลง ทีละ Mix' as const
 
+export const heroPortrait = {
+  src: '/images/dj-no-jarunning-hero.png',
+  alt: 'DJ N.O. จะRunning สวมเสื้อสีส้มและถืออุปกรณ์ดีเจในภาพเปิดตัว',
+  width: 1086,
+  height: 1448,
+} as const
+
 export const heroLines = [
   'วันนี้ฟังอะไรดี',
   'กดฟังดูก่อน',
@@ -58,6 +65,14 @@ export const liveEvents = [
 ] as const
 
 export const mixes = [
+  {
+    id: 'demo-full-play',
+    title: 'DEMO เกือบจะ FULL PLAY — N.O. จะRunning',
+    type: 'ล่าสุด · DEMO MIX',
+    description: 'DEMO เกือบจะ FULL PLAY ของ DJ N.O. จะRunning เปิดฟังได้บน Mixcloud',
+    url: 'https://www.mixcloud.com/nhongppo89/demo-%E0%B9%80%E0%B8%81%E0%B8%AD%E0%B8%9A%E0%B8%88%E0%B8%B0full-play-no%E0%B8%88%E0%B8%B0running/',
+    artwork: '/images/no-logo.png',
+  },
   {
     id: 'thai-remix-01',
     title: 'Mix ไหลไทยรีมิกซ์ N.O.ดิวะ!! | [ N.O.จะRunning ] Th Remix #01-Edit',
