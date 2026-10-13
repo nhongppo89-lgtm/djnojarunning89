@@ -6,6 +6,9 @@
   targetPort = 3000
   port = 8888
 
+[images]
+  remote_images = ["https://i\\.ytimg\\.com/vi/.*"]
+
 [[headers]]
   for = "/images/*"
   [headers.values]
