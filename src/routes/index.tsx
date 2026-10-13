@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowDown,
   ArrowRight,
@@ -12,6 +12,7 @@ import {
   X,
 } from 'lucide-react'
 import { MediaEmbed } from '@/components/MediaEmbed'
+import { imageSrcSet, imageUrl } from '@/lib/images'
 import {
   artist,
   booking,
@@ -29,12 +30,9 @@ import {
 
 export const Route = createFileRoute('/')({ component: ArtistHome })
 
-function imageUrl(path: string, width: number, quality = 86) {
-  return `/.netlify/images?url=${encodeURIComponent(path)}&w=${width}&q=${quality}`
-}
-
 function ArtistHome() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDialogElement>(null)
   const [activeSection, setActiveSection] = useState('home')
   const [personality, setPersonality] = useState<(typeof heroLines)[number]>(heroLines[0])
 
@@ -44,9 +42,14 @@ function ArtistHome() {
 
   useEffect(() => {
     const root = document.documentElement
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
     let frame = 0
 
     const updateScroll = () => {
+      if (motionPreference.matches) {
+        root.style.setProperty('--hero-progress', '0')
+        return
+      }
       if (frame) return
       frame = requestAnimationFrame(() => {
         const progress = Math.min(window.scrollY / window.innerHeight, 1)
@@ -70,29 +73,45 @@ function ArtistHome() {
 
     sections.forEach((section) => observer.observe(section))
     window.addEventListener('scroll', updateScroll, { passive: true })
+    motionPreference.addEventListener('change', updateScroll)
     updateScroll()
 
     return () => {
       sections.forEach((section) => observer.unobserve(section))
       observer.disconnect()
       window.removeEventListener('scroll', updateScroll)
+      motionPreference.removeEventListener('change', updateScroll)
       if (frame) cancelAnimationFrame(frame)
     }
   }, [])
 
   useEffect(() => {
+    const menu = menuRef.current
+    if (menuOpen && menu && !menu.open) menu.showModal()
+    if (!menuOpen && menu?.open) menu.close()
+    document.documentElement.classList.toggle('menu-open', menuOpen)
     document.body.classList.toggle('menu-open', menuOpen)
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false)
-    }
-    document.addEventListener('keydown', closeOnEscape)
     return () => {
+      document.documentElement.classList.remove('menu-open')
       document.body.classList.remove('menu-open')
-      document.removeEventListener('keydown', closeOnEscape)
     }
   }, [menuOpen])
 
-  const closeMenu = () => setMenuOpen(false)
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1020px)')
+    const closeOnDesktop = () => {
+      if (desktop.matches) setMenuOpen(false)
+    }
+    desktop.addEventListener('change', closeOnDesktop)
+    return () => {
+      desktop.removeEventListener('change', closeOnDesktop)
+    }
+  }, [])
+
+  const closeMenu = () => {
+    menuRef.current?.close()
+    setMenuOpen(false)
+  }
 
   return (
     <main>
@@ -101,12 +120,13 @@ function ArtistHome() {
         <a href="#home" className="mini-mark" onClick={closeMenu} aria-label="กลับหน้าแรก">
           <span>N.O.</span><i aria-hidden="true" />
         </a>
-        <nav className="desktop-nav">
+        <nav className="desktop-nav" aria-label="ส่วนต่าง ๆ ของเว็บไซต์">
           {navigation.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
               className={activeSection === item.id ? 'active' : ''}
+              aria-current={activeSection === item.id ? 'location' : undefined}
             >
               {item.label}
             </a>
@@ -120,24 +140,46 @@ function ArtistHome() {
           aria-controls="mobile-menu"
           aria-label={menuOpen ? 'ปิดเมนู' : 'เปิดเมนู'}
         >
-          {menuOpen ? <X /> : <Menu />}
+          <Menu aria-hidden="true" />
         </button>
-        <nav id="mobile-menu" className={`mobile-nav ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
-          <p>DJ N.O. จะRunning</p>
+      </header>
+      <dialog
+        ref={menuRef}
+        id="mobile-menu"
+        className="mobile-menu"
+        aria-labelledby="mobile-menu-title"
+        onCancel={closeMenu}
+        onClose={() => setMenuOpen(false)}
+      >
+        <div className="mobile-menu-top">
+          <p id="mobile-menu-title">DJ N.O. จะRunning</p>
+          <button className="menu-button" type="button" onClick={closeMenu} aria-label="ปิดเมนู" autoFocus>
+            <X aria-hidden="true" />
+          </button>
+        </div>
+        <nav className="mobile-nav" aria-label="ส่วนต่าง ๆ ของเว็บไซต์">
           {navigation.map((item, index) => (
-            <a key={item.id} href={`#${item.id}`} onClick={closeMenu} tabIndex={menuOpen ? 0 : -1}>
-              <small>{String(index + 1).padStart(2, '0')}</small>{item.label}
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              aria-current={activeSection === item.id ? 'location' : undefined}
+              onClick={() => {
+                closeMenu()
+                document.getElementById(item.id)?.focus({ preventScroll: true })
+              }}
+            >
+              <small aria-hidden="true">{String(index + 1).padStart(2, '0')}</small>{item.label}
             </a>
           ))}
         </nav>
-      </header>
+      </dialog>
 
-      <section id="home" className="hero scene" aria-labelledby="hero-title">
+      <section id="home" className="hero scene" aria-labelledby="hero-title" tabIndex={-1}>
         <div className="hero-image-wrap">
           <img
             src={imageUrl(heroPortrait.src, 900)}
             srcSet={`${imageUrl(heroPortrait.src, 400)} 400w, ${imageUrl(heroPortrait.src, 700)} 700w, ${imageUrl(heroPortrait.src, 1086)} 1086w`}
-            sizes="(min-width: 1020px) 46vw, (min-width: 600px) 560px, calc(100vw - 40px)"
+            sizes="(min-width: 1352px) 624px, (min-width: 720px) calc((100vw - 104px) / 2), (min-width: 600px) 560px, calc(100vw - 40px)"
             alt={heroPortrait.alt}
             width={heroPortrait.width}
             height={heroPortrait.height}
@@ -148,7 +190,7 @@ function ArtistHome() {
         <div className="running-line running-line--two" aria-hidden="true" />
         <div className="hero-content content-shell">
           <p className="eyebrow">THAI / LAO REMIX</p>
-          <h1 id="hero-title"><span>DJ N.O.</span><span className="running-word">จะRunning</span></h1>
+          <h1 id="hero-title" aria-label={artist.name}><span>DJ N.O.</span><span className="running-word">จะRunning</span></h1>
           <p className="thai-name">เอ็นโอจะรันนิ่ง</p>
           <p className="hero-intro">{heroIntro}</p>
           <div className="hero-meta"><span>HIP-HOP · R&amp;B · EDM</span><span>EXPLORING</span></div>
@@ -162,7 +204,7 @@ function ArtistHome() {
         <a className="scroll-cue" href="#about"><span>เลื่อนลง</span><ArrowDown size={17} /></a>
       </section>
 
-      <section id="about" className="about scene" aria-labelledby="about-title">
+      <section id="about" className="about scene" aria-labelledby="about-title" tabIndex={-1}>
         <div className="content-shell about-grid">
           <div className="section-number">01 / รู้จักกันก่อน</div>
           <div className="about-copy reveal-copy">
@@ -175,7 +217,9 @@ function ArtistHome() {
             <img
               src={imageUrl('/images/no-performing.jpeg', 900)}
               srcSet={`${imageUrl('/images/no-performing.jpeg', 700)} 700w, ${imageUrl('/images/no-performing.jpeg', 1100)} 1100w`}
-              sizes="(max-width: 800px) 88vw, 38vw"
+              sizes="(max-width: 719px) calc(100vw - 40px), (min-width: 1352px) 440px, 35vw"
+              width="3024"
+              height="4032"
               alt="DJ N.O. จะRunning กำลังเลือกและ Mix เพลง"
               loading="lazy"
             />
@@ -184,7 +228,7 @@ function ArtistHome() {
         </div>
       </section>
 
-      <section id="sound" className="sound scene" aria-labelledby="sound-title">
+      <section id="sound" className="sound scene" aria-labelledby="sound-title" tabIndex={-1}>
         <div className="content-shell">
           <div className="sound-heading">
             <p className="eyebrow">ตอนนี้เปิดประมาณนี้</p>
@@ -205,13 +249,15 @@ function ArtistHome() {
         </div>
       </section>
 
-      <section id="live" className="live scene" aria-labelledby="live-title">
+      <section id="live" className="live scene" aria-labelledby="live-title" tabIndex={-1}>
         <div className="content-shell live-grid">
           <figure className="live-visual image-reveal">
             <img
               src={imageUrl('/images/no-performing.jpeg', 1100)}
               srcSet={`${imageUrl('/images/no-performing.jpeg', 700)} 700w, ${imageUrl('/images/no-performing.jpeg', 1300)} 1300w`}
-              sizes="(max-width: 800px) 92vw, 52vw"
+              sizes="(max-width: 719px) calc(100vw - 40px), (min-width: 1352px) 640px, 48vw"
+              width="3024"
+              height="4032"
               alt="DJ N.O. จะRunning กำลังเล่นเพลงจริงหน้างานด้วย Hercules DJControl Inpulse 500"
               loading="lazy"
             />
@@ -231,7 +277,7 @@ function ArtistHome() {
         </div>
       </section>
 
-      <section id="mixes" className="mixes scene" aria-labelledby="mixes-title">
+      <section id="mixes" className="mixes scene" aria-labelledby="mixes-title" tabIndex={-1}>
         <div className="mixes-intro content-shell">
           <p className="eyebrow">เปิดฟังได้จริง</p>
           <h2 id="mixes-title">ผลงาน Mix</h2>
@@ -244,7 +290,9 @@ function ArtistHome() {
                 <img
                   src={imageUrl(mix.artwork, 900)}
                   srcSet={`${imageUrl(mix.artwork, 600)} 600w, ${imageUrl(mix.artwork, 1000)} 1000w`}
-                  sizes="(max-width: 800px) 92vw, 45vw"
+                  sizes="(max-width: 719px) calc(100vw - 40px), (min-width: 1352px) 640px, 48vw"
+                  width="1000"
+                  height="1000"
                   alt={`Artwork สำหรับ ${mix.title}`}
                   loading="lazy"
                 />
@@ -261,7 +309,7 @@ function ArtistHome() {
         </div>
       </section>
 
-      <section id="video" className="video-section scene" aria-labelledby="video-title">
+      <section id="video" className="video-section scene" aria-labelledby="video-title" tabIndex={-1}>
         <div className="content-shell video-heading">
           <div><p className="eyebrow">กดดูได้ ไม่เปิดเอง</p><h2 id="video-title">วิดีโอ</h2></div>
           <p>ไม่ช้าไม่เร็ว<br />แต่มั่วแน่ EP.1</p>
@@ -272,7 +320,7 @@ function ArtistHome() {
         </div>
       </section>
 
-      <section id="journey" className="journey scene" aria-labelledby="journey-title">
+      <section id="journey" className="journey scene" aria-labelledby="journey-title" tabIndex={-1}>
         <div className="content-shell journey-grid">
           <div className="journey-heading">
             <p className="eyebrow">ไม่ได้รีบ แต่ไม่หยุด</p>
@@ -296,6 +344,10 @@ function ArtistHome() {
           <div className="setup-visual image-reveal">
             <img
               src={imageUrl('/images/no-performing.jpeg', 1300)}
+              srcSet={imageSrcSet('/images/no-performing.jpeg', [400, 700, 1300])}
+              sizes="(max-width: 719px) calc(100vw - 40px), (min-width: 1352px) 700px, 52vw"
+              width="3024"
+              height="4032"
               alt="Hercules DJControl Inpulse 500, iPad และ djay ที่ DJ N.O. จะRunning ใช้ฝึก Mix"
               loading="lazy"
             />
@@ -312,7 +364,7 @@ function ArtistHome() {
         </div>
       </section>
 
-      <section id="gallery" className="gallery scene" aria-labelledby="gallery-title">
+      <section id="gallery" className="gallery scene" aria-labelledby="gallery-title" tabIndex={-1}>
         <div className="content-shell gallery-title-row">
           <div><p className="eyebrow">ภาพจริงระหว่างทาง</p><h2 id="gallery-title">แกลเลอรี</h2></div>
           <p>ผลงาน DJ จริงก่อน แล้วตามด้วย Artwork<br />รองรับรูปชุดใหม่เร็ว ๆ นี้</p>
@@ -322,6 +374,12 @@ function ArtistHome() {
             <figure className={`gallery-item gallery-item--${index + 1} image-reveal`} key={image.src}>
               <img
                 src={imageUrl(image.src, index === 0 ? 1200 : 900)}
+                srcSet={imageSrcSet(image.src, [400, 700, 1200])}
+                sizes={index === 0 || index === 3
+                  ? '(max-width: 719px) calc(100vw - 40px), (min-width: 1352px) 750px, 60vw'
+                  : '(max-width: 719px) calc(100vw - 40px), (min-width: 1352px) 430px, 33vw'}
+                width={index < 2 ? 3024 : index === 2 ? 1353 : 1254}
+                height={index < 2 ? 4032 : index === 2 ? 1353 : 1254}
                 alt={image.alt}
                 loading="lazy"
               />
@@ -331,7 +389,7 @@ function ArtistHome() {
         </div>
       </section>
 
-      <section id="contact" className="contact scene" aria-labelledby="contact-title">
+      <section id="contact" className="contact scene" aria-labelledby="contact-title" tabIndex={-1}>
         <div className="contact-orbit" aria-hidden="true"><i /><i /><i /></div>
         <div className="content-shell contact-inner">
           <p className="eyebrow">Booking / คุยกันได้เลย</p>
@@ -351,7 +409,7 @@ function ArtistHome() {
             <a href={artist.social.youtube} target="_blank" rel="noreferrer">YouTube <ExternalLink size={13} /></a>
             <a href={artist.social.mixcloud} target="_blank" rel="noreferrer"><Music2 size={15} /> Mixcloud <ExternalLink size={13} /></a>
           </div>
-          <div className="contact-signoff"><span>DJ N.O.</span><span className="running-word">จะRunning</span></div>
+          <div className="contact-signoff" aria-hidden="true"><span>DJ N.O.</span><span className="running-word">จะRunning</span></div>
           <p className="still-running">ยัง Running อยู่</p>
         </div>
       </section>
