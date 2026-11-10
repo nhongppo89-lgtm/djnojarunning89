@@ -193,7 +193,7 @@ function ArtistHome() {
         <div className="running-line running-line--one" aria-hidden="true" />
         <div className="running-line running-line--two" aria-hidden="true" />
         <div className="hero-content content-shell">
-          <p className="season-label"><span className="day-label">WINTER STREET ENERGY</span><span className="night-label">NEON DJ ENERGY</span><span>/ BANGKOK TIME</span></p>
+          <p className="season-label"><span className="day-label">WINTER STREET ENERGY</span><span className="night-label">NEON DJ ENERGY</span></p>
           <p className="eyebrow">THAI / LAO REMIX</p>
           <h1 id="hero-title" aria-label={artist.name}><span>DJ N.O.</span><span className="running-word">จะRunning</span></h1>
           <p className="street-tag">STREET <span>→</span> SYSTEM / ยัง Running อยู่</p>
