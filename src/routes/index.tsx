@@ -11,6 +11,7 @@ import {
   Play,
   X,
 } from 'lucide-react'
+import { ThemeControl } from '@/components/ThemeControl'
 import { MediaEmbed } from '@/components/MediaEmbed'
 import { imageSrcSet, imageUrl } from '@/lib/images'
 import {
@@ -132,6 +133,7 @@ function ArtistHome() {
             </a>
           ))}
         </nav>
+        <ThemeControl />
         <button
           className="menu-button"
           type="button"
@@ -175,7 +177,9 @@ function ArtistHome() {
       </dialog>
 
       <section id="home" className="hero scene" aria-labelledby="hero-title" tabIndex={-1}>
+        <div className="winter-atmosphere" aria-hidden="true"><i /><i /></div>
         <div className="hero-image-wrap">
+          <div className="portrait-code" aria-hidden="true">N.O. / STREET TO SYSTEM<span>THAI / LAO REMIX</span></div>
           <img
             src={imageUrl(heroPortrait.src, 900)}
             srcSet={`${imageUrl(heroPortrait.src, 400)} 400w, ${imageUrl(heroPortrait.src, 700)} 700w, ${imageUrl(heroPortrait.src, 1086)} 1086w`}
@@ -189,9 +193,10 @@ function ArtistHome() {
         <div className="running-line running-line--one" aria-hidden="true" />
         <div className="running-line running-line--two" aria-hidden="true" />
         <div className="hero-content content-shell">
-          <p className="season-label">BRIGHT WINTER <span>/ NOVEMBER 2026</span></p>
+          <p className="season-label"><span className="day-label">WINTER STREET ENERGY</span><span className="night-label">NEON DJ ENERGY</span><span>/ BANGKOK TIME</span></p>
           <p className="eyebrow">THAI / LAO REMIX</p>
           <h1 id="hero-title" aria-label={artist.name}><span>DJ N.O.</span><span className="running-word">จะRunning</span></h1>
+          <p className="street-tag">STREET <span>→</span> SYSTEM / ยัง Running อยู่</p>
           <p className="thai-name">เอ็นโอจะรันนิ่ง</p>
           <p className="hero-intro">{heroIntro}</p>
           <div className="hero-meta"><span>HIP-HOP · R&amp;B · EDM</span><span>EXPLORING</span></div>

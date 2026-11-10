@@ -1,5 +1,6 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import '../styles.css'
+import { themeBootstrap } from '@/lib/theme'
 
 const title = 'DJ N.O. จะRunning — เอ็นโอจะรันนิ่ง | DJ Portfolio'
 const description = 'DJ N.O. จะRunning — เอ็นโอจะรันนิ่ง DJ หน้าใหม่จากประเทศไทย สาย Thai / Lao Remix และ Nonstop Mix กำลังสร้าง Sound ของตัวเอง รับเล่นงาน Pub, Birthday, Event, Banquet และ Social Gathering'
@@ -33,8 +34,9 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="th" data-season="bright-winter">
+    <html lang="th" data-season="winter" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <HeadContent />
         <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
