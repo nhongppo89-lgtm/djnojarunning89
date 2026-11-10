@@ -117,7 +117,7 @@ function ArtistHome() {
     <main>
       <a className="skip-link" href="#about">ข้ามไปเนื้อหาหลัก</a>
       <header className="site-header" aria-label="เมนูหลัก">
-        <a href="#home" className="mini-mark" onClick={closeMenu} aria-label="กลับหน้าแรก">
+        <a href="#home" className="mini-mark" onClick={closeMenu} aria-label="N.O. กลับหน้าแรก">
           <span>N.O.</span><i aria-hidden="true" />
         </a>
         <nav className="desktop-nav" aria-label="ส่วนต่าง ๆ ของเว็บไซต์">
@@ -189,6 +189,7 @@ function ArtistHome() {
         <div className="running-line running-line--one" aria-hidden="true" />
         <div className="running-line running-line--two" aria-hidden="true" />
         <div className="hero-content content-shell">
+          <p className="season-label">BRIGHT WINTER <span>/ NOVEMBER 2026</span></p>
           <p className="eyebrow">THAI / LAO REMIX</p>
           <h1 id="hero-title" aria-label={artist.name}><span>DJ N.O.</span><span className="running-word">จะRunning</span></h1>
           <p className="thai-name">เอ็นโอจะรันนิ่ง</p>
@@ -285,14 +286,14 @@ function ArtistHome() {
         </div>
         <div className="mix-stack content-shell">
           {mixes.map((mix, index) => (
-            <article className="mix-card" key={mix.id}>
+            <article className={`mix-card ${index === 0 ? 'mix-card--latest' : ''}`} key={mix.id}>
               <div className="mix-art image-reveal">
                 <img
                   src={imageUrl(mix.artwork, 900)}
                   srcSet={`${imageUrl(mix.artwork, 600)} 600w, ${imageUrl(mix.artwork, 1000)} 1000w`}
                   sizes="(max-width: 719px) calc(100vw - 40px), (min-width: 1352px) 640px, 48vw"
                   width="1000"
-                  height="1000"
+                  height={index === 0 ? 1333 : 1000}
                   alt={`Artwork สำหรับ ${mix.title}`}
                   loading="lazy"
                 />
@@ -367,7 +368,7 @@ function ArtistHome() {
       <section id="gallery" className="gallery scene" aria-labelledby="gallery-title" tabIndex={-1}>
         <div className="content-shell gallery-title-row">
           <div><p className="eyebrow">ภาพจริงระหว่างทาง</p><h2 id="gallery-title">แกลเลอรี</h2></div>
-          <p>ผลงาน DJ จริงก่อน แล้วตามด้วย Artwork<br />รองรับรูปชุดใหม่เร็ว ๆ นี้</p>
+          <p>ภาพระหว่างเล่น DJ<br />และ Artwork ต้นฉบับ</p>
         </div>
         <div className="gallery-stage content-shell">
           {gallery.map((image, index) => (

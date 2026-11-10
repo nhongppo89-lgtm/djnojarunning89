@@ -27,7 +27,7 @@ export function MediaEmbed(props: MediaEmbedProps) {
 
   if (props.kind === 'mixcloud') {
     const feed = new URL(props.url).pathname
-    const source = `https://player-widget.mixcloud.com/widget/iframe/?hide_cover=1&light=0&feed=${encodeURIComponent(feed)}`
+    const source = `https://player-widget.mixcloud.com/widget/iframe/?hide_cover=1&light=1&feed=${encodeURIComponent(feed)}`
 
     return (
       <div className="media-embed media-embed--mixcloud">
@@ -42,7 +42,7 @@ export function MediaEmbed(props: MediaEmbedProps) {
             allow="encrypted-media; fullscreen"
           />
         ) : (
-          <button className="load-player" type="button" onClick={() => setLoaded(true)} aria-label={`โหลด Mixcloud Player: ${props.title}`}>
+          <button className="load-player" type="button" onClick={() => setLoaded(true)} title={props.title}>
             <span className="play-icon" aria-hidden="true"><Play size={18} fill="currentColor" /></span>
             <span><strong>ฟัง Mix</strong><small>โหลด Mixcloud Player เมื่อกด</small></span>
           </button>
@@ -66,7 +66,7 @@ export function MediaEmbed(props: MediaEmbedProps) {
           allowFullScreen
         />
       ) : (
-        <button className="video-poster" type="button" onClick={() => setLoaded(true)} aria-label={`โหลดวิดีโอ: ${props.title}`}>
+        <button className="video-poster" type="button" onClick={() => setLoaded(true)} aria-label={`ดูวิดีโอ: ${props.title}`}>
           <img src={imageUrl(props.thumbnail, 480)} srcSet={imageSrcSet(props.thumbnail, [320, 480])} sizes="(min-width: 1352px) 1260px, calc(100vw - 40px)" width="480" height="360" alt="" loading="lazy" />
           <span className="video-shade" aria-hidden="true" />
           <span className="video-play"><Play size={25} fill="currentColor" aria-hidden="true" /> ดูวิดีโอ</span>

@@ -71,7 +71,7 @@ export const mixes = [
     type: 'ล่าสุด · MIX',
     description: 'Mix ใหม่จาก DJ N.O. จะRunning รอบนี้ไหล Feel ไหน กดฟังกันได้เลย',
     url: 'https://www.mixcloud.com/nhongppo89/mix-%E0%B9%84%E0%B8%AB%E0%B8%A5-feel%E0%B9%84%E0%B8%AB%E0%B8%99-%E0%B8%A7%E0%B8%B0%E0%B8%9E-edit-no%E0%B8%88%E0%B8%B0running/?utm_medium=share&utm_source=clipboard&utm_content=cloudcast&utm_term=VXNlcjo1NTM1NTYyMA%3D%3D',
-    artwork: '/images/no-logo.png',
+    artwork: '/images/mix-flow-feel-winter.png',
   },
   {
     id: 'demo-full-play',
@@ -126,7 +126,7 @@ export const journey = [
   'iPad / djay',
   'เรียนรู้ด้วยตัวเอง',
   'DDJ-200',
-  'Hercules Inpulse 500',
+  'Hercules DJControl Inpulse 500',
   'ฝึก Mix',
   'เริ่มเล่นงานจริง',
   'DJ N.O. จะRunning',

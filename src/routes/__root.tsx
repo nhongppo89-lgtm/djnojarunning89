@@ -11,7 +11,7 @@ export const Route = createRootRoute({
       { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
       { title },
       { name: 'description', content: description },
-      { name: 'theme-color', content: '#050708' },
+      { name: 'theme-color', content: '#f3f8fc' },
       { property: 'og:type', content: 'website' },
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
@@ -33,7 +33,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="th">
+    <html lang="th" data-season="bright-winter">
       <head>
         <HeadContent />
         <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
