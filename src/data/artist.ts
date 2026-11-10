@@ -66,9 +66,17 @@ export const liveEvents = [
 
 export const mixes = [
   {
+    id: 'flow-feel-edit',
+    title: 'Mix ไหล Feel ไหน วะพี่ (Edit N.O.จะRunning)',
+    type: 'ล่าสุด · MIX',
+    description: 'Mix ใหม่จาก DJ N.O. จะRunning รอบนี้ไหล Feel ไหน กดฟังกันได้เลย',
+    url: 'https://www.mixcloud.com/nhongppo89/mix-%E0%B9%84%E0%B8%AB%E0%B8%A5-feel%E0%B9%84%E0%B8%AB%E0%B8%99-%E0%B8%A7%E0%B8%B0%E0%B8%9E-edit-no%E0%B8%88%E0%B8%B0running/?utm_medium=share&utm_source=clipboard&utm_content=cloudcast&utm_term=VXNlcjo1NTM1NTYyMA%3D%3D',
+    artwork: '/images/no-logo.png',
+  },
+  {
     id: 'demo-full-play',
     title: 'DEMO เกือบจะ FULL PLAY — N.O. จะRunning',
-    type: 'ล่าสุด · DEMO MIX',
+    type: 'DEMO MIX',
     description: 'DEMO เกือบจะ FULL PLAY ของ DJ N.O. จะRunning เปิดฟังได้บน Mixcloud',
     url: 'https://www.mixcloud.com/nhongppo89/demo-%E0%B9%80%E0%B8%81%E0%B8%AD%E0%B8%9A%E0%B8%88%E0%B8%B0full-play-no%E0%B8%88%E0%B8%B0running/',
     artwork: '/images/no-logo.png',
